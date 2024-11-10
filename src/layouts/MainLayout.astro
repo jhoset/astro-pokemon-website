@@ -1,7 +1,7 @@
 ---
 //? Code of Server-Side Rendering - Built time
 
-import {ViewTransitions} from "astro:transitions";
+//import {ViewTransitions} from "astro:transitions";
 import {siteInfo} from "../consts/site-info";
 
 interface Props {
@@ -37,7 +37,12 @@ const {title = siteInfo.title, image = siteInfo.image, description = siteInfo.de
     <meta property="twitter:image" content={image}/>
     <!--  REQUIRED -->
     <title> { title } </title>
-    <ViewTransitions/>
+    <!-- <ViewTransitions/> -->
+    <style>
+        @view-transition {
+            navigation: auto; /* enabled! */
+        }
+    </style>
 </head>
 <body class="bg-zinc-800 text-zinc-100 m-auto max-w-3xl">
     <main class="mt-10">
