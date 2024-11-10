@@ -1,0 +1,40 @@
+---
+interface Props {
+    url: string;
+    name: string;
+    isBig?: boolean;
+}
+const {url, name, isBig = false} = Astro.props;
+const pokemonId = url.split('/').at(-2);
+const pokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+---
+<!--class={`card w-full rounded-xl p-4 ${!isBig && 'bg-zinc-700 shadow-lg'}`}-->
+<a href={`/pokemons/${name}`}
+   class:list={[
+       `card w-full rounded-xl p-4`,
+       !isBig && 'bg-zinc-700 shadow-lg']
+   }>
+    <div class="flex justify-center">
+        <img
+                transition:name={`${pokemonId}-image`}
+                class:list={[
+                    `w-65 h-65 pokemon-img`,
+                    !isBig && 'w-20 h-20'
+                ]} src={pokemonImgUrl}/>
+    </div>
+    <h2 class:list={[
+        `capitalize text-center font-normal`,
+        {
+            'text-3xl font-medium text-green-400': isBig
+        }
+    ]}>
+        #{pokemonId} {name}
+    </h2>
+</a>
+
+
+<style>
+    .pokemon-img {
+        filter: drop-shadow(0 0 5px rgb(84, 138, 92));
+    }
+</style>
