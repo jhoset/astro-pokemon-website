@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/94195f32-3841-4540-a2d2-3054150ad23f)
+
 # Astro Starter Kit: Minimal
 
 ```sh
