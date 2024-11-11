@@ -1,0 +1,25 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+import Title from "@components/shared/Title.astro";
+import {Counter} from "@components/Counter";
+
+const counterValue = 15;
+---
+
+<MainLayout title="Favorites">
+    <Title>Islands</Title>
+
+    <div style={{height: '1000px', backgroundColor: 'cyan', opacity: 0.5}}>
+
+    </div>
+
+    <Counter
+            transition:persist="counter"
+            client:visible
+            initialValue={counterValue}>
+        <Title>Counter Component</Title>
+    </Counter>
+    <!--<Counter client:only="solid-js"/>-->
+    <!--<Counter client:load/>-->
+
+</MainLayout>

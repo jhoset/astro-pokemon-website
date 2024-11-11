@@ -1,0 +1,64 @@
+---
+const links = [
+    {
+        href: '/',
+        text: 'Home'
+    },
+    {
+        href: '/pokemons/1',
+        text: 'Paginated'
+    },
+    {
+        href: '/favorites',
+        text: 'Favorites'
+    },
+    {
+        href: '/examples/islands',
+        text: 'Examples'
+    }
+]
+
+const currentPathName = Astro.url.pathname;
+---
+
+
+<nav class="shadow bg-zinc-900">
+    <div class="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300">
+        <!-- CLASSIC WAY TO HANDLE NAV BAR LINKS - ACTIVE CLASS
+        {
+            links.map(({href, text}) => {
+                return (
+                        <a href={href}
+                           class:list={[
+                               'text-gray-200 mx-1.5 sm:mx-6',
+                               {'border-b-2 border-blue-500': currentPathName === href}
+                           ]}>
+                            {text}
+                        </a>
+                )
+            })
+        }
+        -->
+
+        {
+            links.map(({href, text}) => {
+                return (
+                        <div>
+                            <a href={href}
+                               class="text-gray-200 mx-1.5 sm:mx-6">
+                                {text}
+                            </a>
+                            {
+                                currentPathName === href ?
+                                <div 
+                                        transition:name="nav-active-item"
+                                        class="border-b-2 border-blue-500 mx-5 mt-1">
+                                </div> : <div class="border-b-2 border-transparent mt-1"></div>
+                            }
+                        </div>
+                )
+            })
+        }
+
+    </div>
+</nav>

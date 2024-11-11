@@ -2,6 +2,8 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import type {GetStaticPaths} from "astro";
 import PokemonCard from "../../components/pokemons/PokemonCard.astro";
+import Title from "../../components/shared/Title.astro";
+import {Icon} from "astro-icon/components";
 
 export const getStaticPaths = (async () => {
 
@@ -30,11 +32,20 @@ const pokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/
         description={`Pokemon Details of ${name}`}
         image={pokemonImgUrl}>
     <section class="mt-10 mx-10 flex flex-col justify-center items-center">
-        <div>
-            <a href="/" class="text-blue-400">Back to Home</a>
+        <button class="text-blue-400 mb-4" onclick="history.back()">
+            Back
+        </button>
+        <div class="flex  flex-col justify-center items-center w-full">
+            <Title> {name} </Title>
+
+            <button id="favorite-btn" data-name={name} data-id={id}>
+                <Icon data-outline name="heart-outline" class="hover:text-red-500 transition-all ease-in" size={50}/>
+                <Icon data-full name="heart-full" class="text-red-500 hover:animate-pulse hidden" size={50}/>
+            </button>
         </div>
 
-        <audio controls autoplay class="mt-10">
+
+        <audio controls autoplay class="mt-10 hidden">
             <source src={audioUrl} type="audio/ogg">
             Your browser does not support the audio element.
         </audio>
@@ -42,6 +53,76 @@ const pokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/
         <PokemonCard isBig name={name} url={url}/>
     </section>
 </MainLayout>
+
+<script>
+    // document.addEventListener('astro:before-preparation', () => {
+    //     console.log('before-preparation');
+    // })
+    //
+    // document.addEventListener('astro:after-preparation', () => {
+    //     console.log('after-preparation');
+    // })
+    //
+    // document.addEventListener('astro:before-swap', () => {
+    //     console.log('before-swap');
+    // })
+    //
+    // document.addEventListener('astro:after-swap', () => {
+    //     console.log('after-swap');
+    // })
+
+    import type {FavoritePokemon} from "../../interfaces/favorite-pokemon";
+
+    const handlePageLoad = () => {
+        const favoritePokemonsStorageKey = 'favorite-pokemons';
+        let favoritePokemons: FavoritePokemon[] = JSON.parse(localStorage.getItem(favoritePokemonsStorageKey) || '[]');
+
+        const btnFavorite = document.querySelector('#favorite-btn') as HTMLButtonElement;
+
+        if (!btnFavorite) return;
+
+        const name = btnFavorite?.dataset.name ?? '';
+        const id = btnFavorite?.dataset.id ?? '0';
+        const heartOutlineIcon = btnFavorite?.querySelector('[data-outline]') as HTMLElement;
+        const heartFullIcon = btnFavorite?.querySelector('[data-full]') as HTMLElement;
+
+        const checkPokemonIsFavorite = () => {
+            const isFavorite = favoritePokemons.some((pokemon) => pokemon.id === +id);
+            if (isFavorite) {
+                toggleHiddenClass();
+            }
+        }
+
+        const toggleHiddenClass = () => {
+            heartOutlineIcon.classList.toggle('hidden');
+            heartFullIcon.classList.toggle('hidden');
+        }
+
+        const toggleFavorite = () => {
+            const isFavorite = favoritePokemons.some((pokemon) => pokemon.id === +id);
+            console.log({isFavorite});
+            if (isFavorite) {
+                favoritePokemons = favoritePokemons.filter((pokemon) => pokemon.id !== +id);
+                localStorage.setItem(favoritePokemonsStorageKey, JSON.stringify(favoritePokemons));
+            } else {
+                favoritePokemons.push({id: +id, name});
+                localStorage.setItem(favoritePokemonsStorageKey, JSON.stringify(favoritePokemons));
+            }
+        }
+
+        checkPokemonIsFavorite();
+
+        btnFavorite.addEventListener('click', () => {
+            toggleHiddenClass();
+            toggleFavorite();
+        });
+    }
+
+    document.addEventListener('astro:page-load', handlePageLoad);
+
+
+</script>
+
 <style>
     a {
         @apply hover:underline text-blue-500;
